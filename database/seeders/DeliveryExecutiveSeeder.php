@@ -1,0 +1,38 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\DeliveryExecutive;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class DeliveryExecutiveSeeder extends Seeder
+{
+
+    /**
+     * Run the database seeds.
+     */
+    public function run($branch): void
+    {
+        for ($i = 0; $i < 11; $i++) {
+            $customer = new DeliveryExecutive();
+            $customer->branch_id = $branch->id;
+            $customer->name = fake()->firstName() . ' ' . fake()->lastName();
+            $customer->email = fake()->unique()->safeEmail();
+            $customer->phone = fake()->unique()->numerify('##########'); // 10 numbers only
+            $customer->phone = preg_replace('/[^0-9]/', '', $customer->phone);
+            $customer->phone_code = '91';
+            $customer->status = DeliveryExecutive::STATUS_ACTIVE;
+            $customer->is_online = true;
+            $customer->save();
+            
+
+            if($i == 0) {
+                $customer->unique_code = 'TT00'.$customer->id;
+            } 
+
+            $customer->branch_id = $branch->id;
+            $customer->saveQuietly();
+        }
+    }
+}
